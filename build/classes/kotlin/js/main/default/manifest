@@ -1,0 +1,10 @@
+abi_version=1.201.0
+builtins_platform=JS
+compiler_version=2.1.0
+depends=org.jetbrains.kotlin\:kotlin-dom-api-compat kotlin
+ir_signature_versions=1,2
+jsOutputName=action-build-scan-push-container
+metadata_version=1.4.1
+serializedIrFileFingerprints=1nxjz2hrkob68.ixa33aoohytt
+serializedKlibFingerprint=21kp4nn3cupk1.2atgaaliwas32
+unique_name=kotlin.test.actions\:action-build-scan-push-container

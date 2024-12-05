@@ -1,0 +1,16 @@
+{
+  "name": "action-build-scan-push-container",
+  "version": "0.0.1",
+  "main": "kotlin/action-build-scan-push-container.js",
+  "devDependencies": {
+    "typescript": "5.5.4",
+    "source-map-support": "0.5.21"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.0"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": []
+}
