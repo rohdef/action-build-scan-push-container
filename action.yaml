@@ -1,4 +1,4 @@
-      name: Build container
+name: Build container
 description: ""
 
 inputs:
@@ -30,7 +30,7 @@ outputs:
 
 runs:
   using: node20
-  main: "build/js/packages/action-build-scan-push-container/kotlin/action-build-scan-push-container.js  "
+  main: "js/index.js"
 #  using: composite
 #  steps:
 #    - name: Build image
