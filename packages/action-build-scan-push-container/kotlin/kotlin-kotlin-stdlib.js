@@ -28,10 +28,11 @@ if (typeof ArrayBuffer.isView === 'undefined') {
   //endregion
   //region block: pre-declaration
   initMetadataForObject(Unit, 'Unit');
-  initMetadataForClass(BaseOutput, 'BaseOutput');
-  initMetadataForClass(NodeJsOutput, 'NodeJsOutput', VOID, BaseOutput);
-  initMetadataForClass(BufferedOutput, 'BufferedOutput', BufferedOutput, BaseOutput);
-  initMetadataForClass(BufferedOutputToConsoleLog, 'BufferedOutputToConsoleLog', BufferedOutputToConsoleLog, BufferedOutput);
+  initMetadataForClass(InterceptedCoroutine, 'InterceptedCoroutine');
+  initMetadataForClass(CoroutineImpl, 'CoroutineImpl', VOID, InterceptedCoroutine);
+  initMetadataForClass(Exception, 'Exception', Exception_init_$Create$, Error);
+  initMetadataForClass(RuntimeException, 'RuntimeException', RuntimeException_init_$Create$, Exception);
+  initMetadataForClass(NullPointerException, 'NullPointerException', NullPointerException_init_$Create$, RuntimeException);
   //endregion
   function implement(interfaces) {
     var maxSize = 1;
@@ -153,8 +154,55 @@ if (typeof ArrayBuffer.isView === 'undefined') {
     }
     return obj1 === obj2;
   }
+  function captureStack(instance, constructorFunction) {
+    if (Error.captureStackTrace != null) {
+      Error.captureStackTrace(instance, constructorFunction);
+    } else {
+      // Inline function 'kotlin.js.asDynamic' call
+      instance.stack = (new Error()).stack;
+    }
+  }
   function protoOf(constructor) {
     return constructor.prototype;
+  }
+  function extendThrowable(this_, message, cause) {
+    Error.call(this_);
+    setPropertiesToThrowableInstance(this_, message, cause);
+  }
+  function setPropertiesToThrowableInstance(this_, message, cause) {
+    var errorInfo = calculateErrorInfo(Object.getPrototypeOf(this_));
+    if ((errorInfo & 1) === 0) {
+      var tmp;
+      if (message == null) {
+        var tmp_0;
+        if (!(message === null)) {
+          var tmp1_elvis_lhs = cause == null ? null : cause.toString();
+          tmp_0 = tmp1_elvis_lhs == null ? VOID : tmp1_elvis_lhs;
+        } else {
+          tmp_0 = VOID;
+        }
+        tmp = tmp_0;
+      } else {
+        tmp = message;
+      }
+      this_.message = tmp;
+    }
+    if ((errorInfo & 2) === 0) {
+      this_.cause = cause;
+    }
+    this_.name = Object.getPrototypeOf(this_).constructor.name;
+  }
+  function ensureNotNull(v) {
+    var tmp;
+    if (v == null) {
+      THROW_NPE();
+    } else {
+      tmp = v;
+    }
+    return tmp;
+  }
+  function THROW_NPE() {
+    throw NullPointerException_init_$Create$();
   }
   function createMetadata(kind, name, defaultConstructor, associatedObjectKey, associatedObjects, suspendArity) {
     var undef = VOID;
@@ -210,6 +258,38 @@ if (typeof ArrayBuffer.isView === 'undefined') {
   function isArrayish(o) {
     return isJsArray(o) || isView(o);
   }
+  function calculateErrorInfo(proto) {
+    var tmp0_safe_receiver = proto.constructor;
+    var metadata = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.$metadata$;
+    var tmp2_safe_receiver = metadata == null ? null : metadata.errorInfo;
+    if (tmp2_safe_receiver == null)
+      null;
+    else {
+      // Inline function 'kotlin.let' call
+      return tmp2_safe_receiver;
+    }
+    var result = 0;
+    if (hasProp(proto, 'message'))
+      result = result | 1;
+    if (hasProp(proto, 'cause'))
+      result = result | 2;
+    if (!(result === 3)) {
+      var parentProto = getPrototypeOf(proto);
+      if (parentProto != Error.prototype) {
+        result = result | calculateErrorInfo(parentProto);
+      }
+    }
+    if (!(metadata == null)) {
+      metadata.errorInfo = result;
+    }
+    return result;
+  }
+  function hasProp(proto, propName) {
+    return proto.hasOwnProperty(propName);
+  }
+  function getPrototypeOf(obj) {
+    return Object.getPrototypeOf(obj);
+  }
   function get_VOID() {
     _init_properties_void_kt__3zg9as();
     return VOID;
@@ -231,91 +311,74 @@ if (typeof ArrayBuffer.isView === 'undefined') {
   function Unit_getInstance() {
     return Unit_instance;
   }
-  function get_output() {
-    _init_properties_console_kt__rfg7jv();
-    return output;
-  }
-  var output;
-  function BaseOutput() {
-  }
-  protoOf(BaseOutput).a = function () {
-    this.b('\n');
-  };
-  protoOf(BaseOutput).c = function (message) {
-    this.b(message);
-    this.a();
-  };
-  function NodeJsOutput(outputStream) {
-    BaseOutput.call(this);
-    this.d_1 = outputStream;
-  }
-  protoOf(NodeJsOutput).b = function (message) {
-    // Inline function 'kotlin.io.String' call
-    var tmp1_elvis_lhs = message == null ? null : toString(message);
-    var messageString = tmp1_elvis_lhs == null ? 'null' : tmp1_elvis_lhs;
-    this.d_1.write(messageString);
-  };
-  function BufferedOutputToConsoleLog() {
-    BufferedOutput.call(this);
-  }
-  protoOf(BufferedOutputToConsoleLog).b = function (message) {
-    // Inline function 'kotlin.io.String' call
-    var tmp1_elvis_lhs = message == null ? null : toString(message);
-    var s = tmp1_elvis_lhs == null ? 'null' : tmp1_elvis_lhs;
-    // Inline function 'kotlin.text.nativeLastIndexOf' call
-    // Inline function 'kotlin.js.asDynamic' call
-    var i = s.lastIndexOf('\n', 0);
-    if (i >= 0) {
-      var tmp = this;
-      var tmp_0 = this.f_1;
-      // Inline function 'kotlin.text.substring' call
-      // Inline function 'kotlin.js.asDynamic' call
-      tmp.f_1 = tmp_0 + s.substring(0, i);
-      this.g();
-      var tmp6 = s;
-      // Inline function 'kotlin.text.substring' call
-      var startIndex = i + 1 | 0;
-      // Inline function 'kotlin.js.asDynamic' call
-      s = tmp6.substring(startIndex);
-    }
-    this.f_1 = this.f_1 + s;
-  };
-  protoOf(BufferedOutputToConsoleLog).g = function () {
-    console.log(this.f_1);
-    this.f_1 = '';
-  };
-  function BufferedOutput() {
-    BaseOutput.call(this);
-    this.f_1 = '';
-  }
-  protoOf(BufferedOutput).b = function (message) {
+  function CoroutineImpl(resultContinuation) {
+    InterceptedCoroutine.call(this);
+    this.b_1 = resultContinuation;
+    this.c_1 = 0;
+    this.d_1 = 0;
+    this.e_1 = null;
+    this.f_1 = null;
+    this.g_1 = null;
     var tmp = this;
-    var tmp_0 = this.f_1;
-    // Inline function 'kotlin.io.String' call
-    var tmp1_elvis_lhs = message == null ? null : toString(message);
-    tmp.f_1 = tmp_0 + (tmp1_elvis_lhs == null ? 'null' : tmp1_elvis_lhs);
-  };
-  function println(message) {
-    _init_properties_console_kt__rfg7jv();
-    get_output().c(message);
+    var tmp0_safe_receiver = this.b_1;
+    tmp.h_1 = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.i();
   }
-  var properties_initialized_console_kt_gll9dl;
-  function _init_properties_console_kt__rfg7jv() {
-    if (!properties_initialized_console_kt_gll9dl) {
-      properties_initialized_console_kt_gll9dl = true;
-      // Inline function 'kotlin.run' call
-      // Inline function 'kotlin.io.output.<anonymous>' call
-      var isNode = typeof process !== 'undefined' && process.versions && !!process.versions.node;
-      output = isNode ? new NodeJsOutput(process.stdout) : new BufferedOutputToConsoleLog();
-    }
+  protoOf(CoroutineImpl).i = function () {
+    return ensureNotNull(this.h_1);
+  };
+  function InterceptedCoroutine() {
+    this.j_1 = null;
+  }
+  function Exception_init_$Init$($this) {
+    extendThrowable($this);
+    Exception.call($this);
+    return $this;
+  }
+  function Exception_init_$Create$() {
+    var tmp = Exception_init_$Init$(objectCreate(protoOf(Exception)));
+    captureStack(tmp, Exception_init_$Create$);
+    return tmp;
+  }
+  function Exception() {
+    captureStack(this, Exception);
+  }
+  function RuntimeException_init_$Init$($this) {
+    Exception_init_$Init$($this);
+    RuntimeException.call($this);
+    return $this;
+  }
+  function RuntimeException_init_$Create$() {
+    var tmp = RuntimeException_init_$Init$(objectCreate(protoOf(RuntimeException)));
+    captureStack(tmp, RuntimeException_init_$Create$);
+    return tmp;
+  }
+  function RuntimeException() {
+    captureStack(this, RuntimeException);
+  }
+  function NullPointerException_init_$Init$($this) {
+    RuntimeException_init_$Init$($this);
+    NullPointerException.call($this);
+    return $this;
+  }
+  function NullPointerException_init_$Create$() {
+    var tmp = NullPointerException_init_$Init$(objectCreate(protoOf(NullPointerException)));
+    captureStack(tmp, NullPointerException_init_$Create$);
+    return tmp;
+  }
+  function NullPointerException() {
+    captureStack(this, NullPointerException);
   }
   //region block: init
   Unit_instance = new Unit();
   //endregion
   //region block: exports
   _.$_$ = _.$_$ || {};
-  _.$_$.a = Unit_instance;
-  _.$_$.b = println;
+  _.$_$.a = VOID;
+  _.$_$.b = Unit_instance;
+  _.$_$.c = CoroutineImpl;
+  _.$_$.d = initMetadataForLambda;
+  _.$_$.e = protoOf;
+  _.$_$.f = toString;
   //endregion
   return _;
 }));
