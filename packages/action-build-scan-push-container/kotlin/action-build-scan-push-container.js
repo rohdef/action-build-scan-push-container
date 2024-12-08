@@ -22,7 +22,7 @@
   function main() {
     console.log('Hello other');
     console.log(core);
-    core.setFailure('We just fail right now');
+    core.setFailed('We just fail right now');
   }
   function mainWrapper() {
     main();
