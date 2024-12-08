@@ -13,6 +13,11 @@ if (typeof Math.imul === 'undefined') {
     return (a & 4.29490176E9) * (b & 65535) + (a & 65535) * (b | 0) | 0;
   };
 }
+if (typeof ArrayBuffer.isView === 'undefined') {
+  ArrayBuffer.isView = function (a) {
+    return a != null && a.__proto__ != null && a.__proto__.__proto__ === Int8Array.prototype.__proto__;
+  };
+}
 //endregion
 (function (factory) {
   if (typeof define === 'function' && define.amd)
@@ -25,6 +30,7 @@ if (typeof Math.imul === 'undefined') {
   'use strict';
   //region block: imports
   var imul = Math.imul;
+  var isView = ArrayBuffer.isView;
   //endregion
   //region block: pre-declaration
   initMetadataForClass(Number_0, 'Number');
@@ -33,6 +39,10 @@ if (typeof Math.imul === 'undefined') {
   initMetadataForCompanion(Companion_0);
   initMetadataForClass(Long, 'Long', VOID, Number_0);
   initMetadataForObject(Unit, 'Unit');
+  initMetadataForClass(BaseOutput, 'BaseOutput');
+  initMetadataForClass(NodeJsOutput, 'NodeJsOutput', VOID, BaseOutput);
+  initMetadataForClass(BufferedOutput, 'BufferedOutput', BufferedOutput, BaseOutput);
+  initMetadataForClass(BufferedOutputToConsoleLog, 'BufferedOutputToConsoleLog', BufferedOutputToConsoleLog, BufferedOutput);
   initMetadataForClass(InterceptedCoroutine, 'InterceptedCoroutine');
   initMetadataForClass(CoroutineImpl, 'CoroutineImpl', VOID, InterceptedCoroutine);
   initMetadataForClass(EmptyContinuation$$inlined$Continuation$1);
@@ -181,6 +191,23 @@ if (typeof Math.imul === 'undefined') {
   function objectCreate(proto) {
     proto = proto === VOID ? null : proto;
     return Object.create(proto);
+  }
+  function toString(o) {
+    var tmp;
+    if (o == null) {
+      tmp = 'null';
+    } else if (isArrayish(o)) {
+      tmp = '[...]';
+    } else if (!(typeof o.toString === 'function')) {
+      tmp = anyToString(o);
+    } else {
+      // Inline function 'kotlin.js.unsafeCast' call
+      tmp = o.toString();
+    }
+    return tmp;
+  }
+  function anyToString(o) {
+    return Object.prototype.toString.call(o);
   }
   function equals(obj1, obj2) {
     if (obj1 == null) {
@@ -643,6 +670,13 @@ if (typeof Math.imul === 'undefined') {
   function initMetadataForCompanion(ctor, parent, interfaces, suspendArity) {
     initMetadataForObject(ctor, 'Companion', VOID, parent, interfaces, suspendArity, VOID, VOID);
   }
+  function isJsArray(obj) {
+    // Inline function 'kotlin.js.unsafeCast' call
+    return Array.isArray(obj);
+  }
+  function isArrayish(o) {
+    return isJsArray(o) || isView(o);
+  }
   function calculateErrorInfo(proto) {
     var tmp0_safe_receiver = proto.constructor;
     var metadata = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.$metadata$;
@@ -699,23 +733,101 @@ if (typeof Math.imul === 'undefined') {
   function Unit_getInstance() {
     return Unit_instance;
   }
+  function get_output() {
+    _init_properties_console_kt__rfg7jv();
+    return output;
+  }
+  var output;
+  function BaseOutput() {
+  }
+  protoOf(BaseOutput).o = function () {
+    this.p('\n');
+  };
+  protoOf(BaseOutput).q = function (message) {
+    this.p(message);
+    this.o();
+  };
+  function NodeJsOutput(outputStream) {
+    BaseOutput.call(this);
+    this.r_1 = outputStream;
+  }
+  protoOf(NodeJsOutput).p = function (message) {
+    // Inline function 'kotlin.io.String' call
+    var tmp1_elvis_lhs = message == null ? null : toString(message);
+    var messageString = tmp1_elvis_lhs == null ? 'null' : tmp1_elvis_lhs;
+    this.r_1.write(messageString);
+  };
+  function BufferedOutputToConsoleLog() {
+    BufferedOutput.call(this);
+  }
+  protoOf(BufferedOutputToConsoleLog).p = function (message) {
+    // Inline function 'kotlin.io.String' call
+    var tmp1_elvis_lhs = message == null ? null : toString(message);
+    var s = tmp1_elvis_lhs == null ? 'null' : tmp1_elvis_lhs;
+    // Inline function 'kotlin.text.nativeLastIndexOf' call
+    // Inline function 'kotlin.js.asDynamic' call
+    var i = s.lastIndexOf('\n', 0);
+    if (i >= 0) {
+      var tmp = this;
+      var tmp_0 = this.t_1;
+      // Inline function 'kotlin.text.substring' call
+      // Inline function 'kotlin.js.asDynamic' call
+      tmp.t_1 = tmp_0 + s.substring(0, i);
+      this.u();
+      var tmp6 = s;
+      // Inline function 'kotlin.text.substring' call
+      var startIndex = i + 1 | 0;
+      // Inline function 'kotlin.js.asDynamic' call
+      s = tmp6.substring(startIndex);
+    }
+    this.t_1 = this.t_1 + s;
+  };
+  protoOf(BufferedOutputToConsoleLog).u = function () {
+    console.log(this.t_1);
+    this.t_1 = '';
+  };
+  function BufferedOutput() {
+    BaseOutput.call(this);
+    this.t_1 = '';
+  }
+  protoOf(BufferedOutput).p = function (message) {
+    var tmp = this;
+    var tmp_0 = this.t_1;
+    // Inline function 'kotlin.io.String' call
+    var tmp1_elvis_lhs = message == null ? null : toString(message);
+    tmp.t_1 = tmp_0 + (tmp1_elvis_lhs == null ? 'null' : tmp1_elvis_lhs);
+  };
+  function println(message) {
+    _init_properties_console_kt__rfg7jv();
+    get_output().q(message);
+  }
+  var properties_initialized_console_kt_gll9dl;
+  function _init_properties_console_kt__rfg7jv() {
+    if (!properties_initialized_console_kt_gll9dl) {
+      properties_initialized_console_kt_gll9dl = true;
+      // Inline function 'kotlin.run' call
+      // Inline function 'kotlin.io.output.<anonymous>' call
+      var isNode = typeof process !== 'undefined' && process.versions && !!process.versions.node;
+      output = isNode ? new NodeJsOutput(process.stdout) : new BufferedOutputToConsoleLog();
+    }
+  }
   function CoroutineImpl(resultContinuation) {
     InterceptedCoroutine.call(this);
-    this.p_1 = resultContinuation;
-    this.q_1 = 0;
-    this.r_1 = 0;
-    this.s_1 = null;
-    this.t_1 = null;
-    this.u_1 = null;
+    this.w_1 = resultContinuation;
+    this.x_1 = 0;
+    this.y_1 = 0;
+    this.z_1 = null;
+    this.a1_1 = null;
+    this.b1_1 = null;
     var tmp = this;
-    var tmp0_safe_receiver = this.p_1;
-    tmp.v_1 = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.w();
+    var tmp0_safe_receiver = this.w_1;
+    tmp.c1_1 = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.d1();
   }
-  protoOf(CoroutineImpl).w = function () {
-    return ensureNotNull(this.v_1);
+  protoOf(CoroutineImpl).d1 = function () {
+    return ensureNotNull(this.c1_1);
   };
   function InterceptedCoroutine() {
-    this.x_1 = null;
+    this.e1_1 = null;
   }
   function get_EmptyContinuation() {
     _init_properties_EmptyContinuation_kt__o181ce();
@@ -723,10 +835,10 @@ if (typeof Math.imul === 'undefined') {
   }
   var EmptyContinuation;
   function EmptyContinuation$$inlined$Continuation$1($context) {
-    this.y_1 = $context;
+    this.f1_1 = $context;
   }
-  protoOf(EmptyContinuation$$inlined$Continuation$1).w = function () {
-    return this.y_1;
+  protoOf(EmptyContinuation$$inlined$Continuation$1).d1 = function () {
+    return this.f1_1;
   };
   var properties_initialized_EmptyContinuation_kt_4jdb9w;
   function _init_properties_EmptyContinuation_kt__o181ce() {
@@ -788,7 +900,7 @@ if (typeof Math.imul === 'undefined') {
   }
   function EmptyCoroutineContext() {
     EmptyCoroutineContext_instance = this;
-    this.b1_1 = new Long(0, 0);
+    this.i1_1 = new Long(0, 0);
   }
   protoOf(EmptyCoroutineContext).toString = function () {
     return 'EmptyCoroutineContext';
@@ -832,10 +944,11 @@ if (typeof Math.imul === 'undefined') {
   _.$_$.c = get_COROUTINE_SUSPENDED;
   _.$_$.d = get_EmptyContinuation;
   _.$_$.e = CoroutineImpl;
-  _.$_$.f = initMetadataForCoroutine;
-  _.$_$.g = initMetadataForLambda;
-  _.$_$.h = protoOf;
-  _.$_$.i = Exception;
+  _.$_$.f = println;
+  _.$_$.g = initMetadataForCoroutine;
+  _.$_$.h = initMetadataForLambda;
+  _.$_$.i = protoOf;
+  _.$_$.j = Exception;
   //endregion
   return _;
 }));

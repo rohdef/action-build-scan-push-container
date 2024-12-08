@@ -23,12 +23,13 @@
   //region block: imports
   var Unit_instance = kotlin_kotlin.$_$.b;
   var CoroutineImpl = kotlin_kotlin.$_$.e;
-  var protoOf = kotlin_kotlin.$_$.h;
-  var Exception = kotlin_kotlin.$_$.i;
-  var initMetadataForLambda = kotlin_kotlin.$_$.g;
+  var protoOf = kotlin_kotlin.$_$.i;
+  var println = kotlin_kotlin.$_$.f;
+  var Exception = kotlin_kotlin.$_$.j;
+  var initMetadataForLambda = kotlin_kotlin.$_$.h;
   var VOID = kotlin_kotlin.$_$.a;
   var get_COROUTINE_SUSPENDED = kotlin_kotlin.$_$.c;
-  var initMetadataForCoroutine = kotlin_kotlin.$_$.f;
+  var initMetadataForCoroutine = kotlin_kotlin.$_$.g;
   var get_EmptyContinuation = kotlin_kotlin.$_$.d;
   //endregion
   //region block: pre-declaration
@@ -39,28 +40,29 @@
   //endregion
   function main($completion) {
     var tmp = new $mainCOROUTINE$0($completion);
-    tmp.s_1 = Unit_instance;
-    tmp.t_1 = null;
-    return tmp.k1();
+    tmp.z_1 = Unit_instance;
+    tmp.a1_1 = null;
+    return tmp.r1();
   }
   function main$slambda$slambda(resultContinuation) {
     CoroutineImpl.call(this, resultContinuation);
   }
-  protoOf(main$slambda$slambda).t1 = function ($completion) {
-    var tmp = this.u1($completion);
-    tmp.s_1 = Unit_instance;
-    tmp.t_1 = null;
-    return tmp.k1();
+  protoOf(main$slambda$slambda).a2 = function ($completion) {
+    var tmp = this.b2($completion);
+    tmp.z_1 = Unit_instance;
+    tmp.a1_1 = null;
+    return tmp.r1();
   };
-  protoOf(main$slambda$slambda).k1 = function () {
-    var suspendResult = this.s_1;
+  protoOf(main$slambda$slambda).r1 = function () {
+    var suspendResult = this.z_1;
     $sm: do
       try {
-        var tmp = this.q_1;
+        var tmp = this.x_1;
         if (tmp === 0) {
-          this.r_1 = 1;
+          this.y_1 = 1;
           try {
-            github.printActionsRuntimeTokenACs();
+            println(github);
+            github.GitHub.printActionsRuntimeTokenACs();
           } catch ($p) {
             if ($p instanceof Exception) {
               var exception = $p;
@@ -75,7 +77,7 @@
           core.info('So this is fine');
           return Unit_instance;
         } else if (tmp === 1) {
-          throw this.t_1;
+          throw this.a1_1;
         }
       } catch ($p) {
         var e = $p;
@@ -83,13 +85,13 @@
       }
      while (true);
   };
-  protoOf(main$slambda$slambda).u1 = function (completion) {
+  protoOf(main$slambda$slambda).b2 = function (completion) {
     return new main$slambda$slambda(completion);
   };
   function main$slambda$slambda_0(resultContinuation) {
     var i = new main$slambda$slambda(resultContinuation);
     var l = function ($completion) {
-      return i.t1($completion);
+      return i.a2($completion);
     };
     l.$arity = 0;
     return l;
@@ -97,23 +99,23 @@
   function main$slambda$slambda_1(resultContinuation) {
     CoroutineImpl.call(this, resultContinuation);
   }
-  protoOf(main$slambda$slambda_1).t1 = function ($completion) {
-    var tmp = this.u1($completion);
-    tmp.s_1 = Unit_instance;
-    tmp.t_1 = null;
-    return tmp.k1();
+  protoOf(main$slambda$slambda_1).a2 = function ($completion) {
+    var tmp = this.b2($completion);
+    tmp.z_1 = Unit_instance;
+    tmp.a1_1 = null;
+    return tmp.r1();
   };
-  protoOf(main$slambda$slambda_1).k1 = function () {
-    var suspendResult = this.s_1;
+  protoOf(main$slambda$slambda_1).r1 = function () {
+    var suspendResult = this.z_1;
     $sm: do
       try {
-        var tmp = this.q_1;
+        var tmp = this.x_1;
         if (tmp === 0) {
-          this.r_1 = 1;
+          this.y_1 = 1;
           core.info('And this is too');
           return Unit_instance;
         } else if (tmp === 1) {
-          throw this.t_1;
+          throw this.a1_1;
         }
       } catch ($p) {
         var e = $p;
@@ -121,13 +123,13 @@
       }
      while (true);
   };
-  protoOf(main$slambda$slambda_1).u1 = function (completion) {
+  protoOf(main$slambda$slambda_1).b2 = function (completion) {
     return new main$slambda$slambda_1(completion);
   };
   function main$slambda$slambda_2(resultContinuation) {
     var i = new main$slambda$slambda_1(resultContinuation);
     var l = function ($completion) {
-      return i.t1($completion);
+      return i.a2($completion);
     };
     l.$arity = 0;
     return l;
@@ -135,22 +137,22 @@
   function main$slambda(resultContinuation) {
     CoroutineImpl.call(this, resultContinuation);
   }
-  protoOf(main$slambda).t1 = function ($completion) {
-    var tmp = this.u1($completion);
-    tmp.s_1 = Unit_instance;
-    tmp.t_1 = null;
-    return tmp.k1();
+  protoOf(main$slambda).a2 = function ($completion) {
+    var tmp = this.b2($completion);
+    tmp.z_1 = Unit_instance;
+    tmp.a1_1 = null;
+    return tmp.r1();
   };
-  protoOf(main$slambda).k1 = function () {
-    var suspendResult = this.s_1;
+  protoOf(main$slambda).r1 = function () {
+    var suspendResult = this.z_1;
     $sm: do
       try {
-        var tmp = this.q_1;
+        var tmp = this.x_1;
         switch (tmp) {
           case 0:
-            this.r_1 = 3;
-            this.l2_1 = new Date();
-            this.q_1 = 1;
+            this.y_1 = 3;
+            this.s2_1 = new Date();
+            this.x_1 = 1;
             var tmp_0 = core;
             suspendResult = tmp_0.group('GitHub Actions runtime token ACs', main$slambda$slambda_0(null), this);
             if (suspendResult === get_COROUTINE_SUSPENDED()) {
@@ -159,7 +161,7 @@
 
             continue $sm;
           case 1:
-            this.q_1 = 2;
+            this.x_1 = 2;
             var tmp_1 = core;
             suspendResult = tmp_1.group('Sofus', main$slambda$slambda_2(null), this);
             if (suspendResult === get_COROUTINE_SUSPENDED()) {
@@ -171,26 +173,26 @@
             core.info("Ok, so we are running, let's see what we can do");
             return Unit_instance;
           case 3:
-            throw this.t_1;
+            throw this.a1_1;
         }
       } catch ($p) {
         var e = $p;
-        if (this.r_1 === 3) {
+        if (this.y_1 === 3) {
           throw e;
         } else {
-          this.q_1 = this.r_1;
-          this.t_1 = e;
+          this.x_1 = this.y_1;
+          this.a1_1 = e;
         }
       }
      while (true);
   };
-  protoOf(main$slambda).u1 = function (completion) {
+  protoOf(main$slambda).b2 = function (completion) {
     return new main$slambda(completion);
   };
   function main$slambda_0(resultContinuation) {
     var i = new main$slambda(resultContinuation);
     var l = function ($completion) {
-      return i.t1($completion);
+      return i.a2($completion);
     };
     l.$arity = 0;
     return l;
@@ -198,15 +200,15 @@
   function $mainCOROUTINE$0(resultContinuation) {
     CoroutineImpl.call(this, resultContinuation);
   }
-  protoOf($mainCOROUTINE$0).k1 = function () {
-    var suspendResult = this.s_1;
+  protoOf($mainCOROUTINE$0).r1 = function () {
+    var suspendResult = this.z_1;
     $sm: do
       try {
-        var tmp = this.q_1;
+        var tmp = this.x_1;
         switch (tmp) {
           case 0:
-            this.r_1 = 2;
-            this.q_1 = 1;
+            this.y_1 = 2;
+            this.x_1 = 1;
             var tmp_0 = actionsToolkit;
             suspendResult = tmp_0.run(main$slambda_0(null), this);
             if (suspendResult === get_COROUTINE_SUSPENDED()) {
@@ -219,15 +221,15 @@
             core.setFailed('We just fail right now');
             return Unit_instance;
           case 2:
-            throw this.t_1;
+            throw this.a1_1;
         }
       } catch ($p) {
         var e = $p;
-        if (this.r_1 === 2) {
+        if (this.y_1 === 2) {
           throw e;
         } else {
-          this.q_1 = this.r_1;
-          this.t_1 = e;
+          this.x_1 = this.y_1;
+          this.a1_1 = e;
         }
       }
      while (true);
