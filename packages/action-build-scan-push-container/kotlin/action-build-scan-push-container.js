@@ -110,8 +110,8 @@
         if (tmp === 0) {
           this.m_1 = 1;
           try {
-            docker.printVersion();
-            docker.printInfo();
+            docker.Docker.printVersion();
+            docker.Docker.printInfo();
           } catch ($p) {
             if ($p instanceof Exception) {
               var exception = $p;
