@@ -14,9 +14,9 @@ inputs:
   context:
     description: "Build's context is the set of files located in the specified PATH or URL"
     required: false
-  docker-file:
+  dockerfile-path:
     description: "Path to the Dockerfile"
-    required: false
+    required: true
   labels:
     description: "List (new line for each entry) of metadata for an image"
     required: false
@@ -64,28 +64,34 @@ inputs:
 outputs:
   imageid:
     description: 'Image ID'
-  digest:
-    description: 'Image digest'
-  metadata:
-    description: 'Build result metadata'
-
-  container-image:
-    description: The random image name used for generation
-    value: ${{ steps.build-image.outputs.container-image }}
-  image-digest:
-    description: The digest of the final image
-    value: ${{ steps.push-image.outputs.image-digest }}
+    value: ${{ steps.build-image.outputs.imageid }}
+#  digest:
+#    description: 'Image digest'
+#  metadata:
+#    description: 'Build result metadata'
+#
+#  container-image:
+#    description: The random image name used for generation
+#    value: ${{ steps.build-image.outputs.container-image }}
+#  image-digest:
+#    description: The digest of the final image
+#    value: ${{ steps.push-image.outputs.image-digest }}
 
 runs:
-  using: node20
-  main: index.js
-#  post: index.js
-#  using: composite
-#  steps:
-#    - name: Build image
-#      id: build-image
-#      shell: bash
-#      run: |
+  using: composite
+  steps:
+    - name: Build image
+      id: build-image
+      uses: rohdef/action-build-container@main
+      with:
+        dockerfile-path: ${{ inputs.docker-file }}
+
+    - name: Deal with output
+      id: out
+      shell: bash
+      run: |
+        echo "Wrapping up"
+        echo ${{ steps.build-image.outputs.imageid }}
 #        IMAGE_NAME=$(uuidgen)
 #
 #        docker build \
