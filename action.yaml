@@ -2,35 +2,17 @@ name: Build container
 description: ""
 
 inputs:
-  add-hosts:
-    description: "List (new line for each entry) of a customs host-to-IP mapping (e.g., docker:10.180.0.1)"
-    required: false
   annotations:
     description: "List (new line for each entry) of annotation to set to the image"
     required: false
   build-args:
     description: "List of build-time variables"
     required: false
-  context:
-    description: "Build's context is the set of files located in the specified PATH or URL"
-    required: false
   dockerfile-path:
     description: "Path to the Dockerfile"
     required: true
   labels:
     description: "List (new line for each entry) of metadata for an image"
-    required: false
-  secrets:
-    description: "List (new line for each entry) of secrets to expose to the build (e.g., key=string, GIT_AUTH_TOKEN=mytoken)"
-    required: false
-  secret-envs:
-    description: "List of secret env vars to expose to the build (e.g., key=envname, MY_SECRET=MY_ENV_VAR)"
-    required: false
-  secret-files:
-    description: "List of secret files to expose to the build (e.g., key=filename, MY_SECRET=./secret.txt)"
-    required: false
-  ssh:
-    description: "List of SSH agent socket or keys to expose to the build"
     required: false
   tags:
     description: "List of tags"
@@ -43,10 +25,6 @@ inputs:
     default: ${{ github.token }}
     required: false
 
-  input-path:
-    description: Path to build docker image from
-    default: "."
-    required: true
   image-destination-host:
     description: "Where to upload the artifact to - if only local is desired just use \"localhost:5000\" - trailing slash is not allowed"
     default: ghcr.io
@@ -84,7 +62,8 @@ runs:
       id: build-image
       uses: rohdef/action-build-container@main
       with:
-        dockerfile-path: ${{ inputs.docker-file }}
+        build-args: ${{ inputs.build-args }}
+        dockerfile-path: ${{ inputs.dockerfile-path }}
         labels: ${{ inputs.labels }}
 
     - name: Deal with output
@@ -93,15 +72,7 @@ runs:
       run: |
         echo "Wrapping up"
         echo ${{ steps.build-image.outputs.imageid }}
-#        IMAGE_NAME=$(uuidgen)
-#
-#        docker build \
-#          --tag "$IMAGE_NAME" \
-    #          --label "runnumber=${GITHUB_RUN_ID}" \
-#          "${{ inputs.input-path }}"
-#
-#        echo "container-image=$(echo ${IMAGE_NAME})" >> "$GITHUB_OUTPUT"
-#
+
 #    - name: Scan container for vulnerabilities
 #      uses: aquasecurity/trivy-action@0.28.0
 #      with:
