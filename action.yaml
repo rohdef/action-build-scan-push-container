@@ -17,13 +17,6 @@ inputs:
   tags:
     description: "List of tags"
     required: false
-  target:
-    description: "Sets the target stage to build"
-    required: false
-  github-token:
-    description: "GitHub Token used to authenticate against a repository for Git context"
-    default: ${{ github.token }}
-    required: false
 
   image-destination-host:
     description: "Where to upload the artifact to - if only local is desired just use \"localhost:5000\" - trailing slash is not allowed"
@@ -41,19 +34,13 @@ inputs:
 
 outputs:
   imageid:
-    description: 'Image ID'
+    description: Image ID/name for the intermediate image - probably a UUID or similar random string/value
     value: ${{ steps.build-image.outputs.imageid }}
-#  digest:
-#    description: 'Image digest'
-#  metadata:
-#    description: 'Build result metadata'
-#
-#  container-image:
-#    description: The random image name used for generation
-#    value: ${{ steps.build-image.outputs.container-image }}
-#  image-digest:
-#    description: The digest of the final image
-#    value: ${{ steps.push-image.outputs.image-digest }}
+  digest:
+    description: Image digest for usage in helm charts or other deployments where it is desired to lock the version to this build
+    value: ${{ steps.build-image.outputs.digest }}
+#  images-pushed:
+#    description: Full list (separated by new lines) of image names pushed
 
 runs:
   using: composite
