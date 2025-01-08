@@ -67,23 +67,16 @@ runs:
         dockerfile-path: ${{ inputs.dockerfile-path }}
         labels: ${{ inputs.labels }}
 
-    - name: Deal with output
-      id: out
-      shell: bash
-      run: |
-        echo "Wrapping up"
-        echo ${{ steps.build-image.outputs.imageid }}
+    - name: Scan container for vulnerabilities
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: ${{ steps.build-image.outputs.imageid }}
+        format: "table"
+        exit-code: "1"
+      env:
+        TRIVY_SKIP_DB_UPDATE: true
+        TRIVY_SKIP_JAVA_DB_UPDATE: true
 
-#    - name: Scan container for vulnerabilities
-#      uses: aquasecurity/trivy-action@0.28.0
-#      with:
-#        image-ref: ${{ steps.build-image.outputs.container-image }}
-#        format: "table"
-#        exit-code: "1"
-#      env:
-#        TRIVY_SKIP_DB_UPDATE: true
-#        TRIVY_SKIP_JAVA_DB_UPDATE: true
-#
 #    - name: Push image
 #      id: push-image
 #      shell: bash
