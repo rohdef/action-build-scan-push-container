@@ -55,6 +55,7 @@ runs:
         labels: ${{ inputs.labels }}
 
     - name: Scan container for vulnerabilities
+      id: cotainer-scanning
       uses: aquasecurity/trivy-action@0.28.0
       with:
         image-ref: ${{ steps.build-image.outputs.imageid }}
@@ -64,27 +65,11 @@ runs:
         TRIVY_SKIP_DB_UPDATE: true
         TRIVY_SKIP_JAVA_DB_UPDATE: true
 
-#    - name: Push image
-#      id: push-image
-#      shell: bash
-#      run: |
-#        # This changes all uppercase characters to lowercase.
-#        IMAGE_ID=$(echo "${{ inputs.image-destination-host }}/${{ inputs.image-destination-name }}" | tr '[A-Z]' '[a-z]')
-#
-#        # This strips the git ref prefix from the version.
-#        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-#        # This strips the "v" prefix from the tag name.
-#        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-#        # This uses the Docker `latest` tag convention.
-#        [ "$VERSION" == "main" ] && VERSION=latest
-#
-#        echo "Pushing image to"
-#        echo "$IMAGE_ID:$VERSION"
-#
-#        docker tag \
-#          "${{ steps.build-image.outputs.container-image }}" \
-#          "$IMAGE_ID:$VERSION"
-#        docker push "$IMAGE_ID:$VERSION"
-#
-#        IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE_ID:$VERSION")
-#        echo "image-digest=$(echo ${IMAGE_DIGEST})" >> "$GITHUB_OUTPUT"
+    - name: Push image
+      id: push-image
+      uses: rohdef/action-push-container
+      with:
+        imageId: ${{ steps.build-image.outputs.imageid }}
+        destinationTags: |
+          - actions
+          - test-actions
