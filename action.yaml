@@ -5,42 +5,47 @@ inputs:
   annotations:
     description: "List (new line for each entry) of annotation to set to the image"
     required: false
-  build-args:
+  buildArgs:
     description: "List of build-time variables"
     required: false
-  dockerfile-path:
+  dockerfilePath:
     description: "Path to the Dockerfile"
     required: true
   labels:
     description: "List (new line for each entry) of metadata for an image"
     required: false
-  tags:
-    description: "List of tags"
-    required: false
 
-  image-destination-host:
-    description: "Where to upload the artifact to - if only local is desired just use \"localhost:5000\" - trailing slash is not allowed"
-    default: ghcr.io
+
+  destinationHosts:
+    description: "Where to upload the artifact to - if only local is desired just use \"localhost:5000\" - trailing slash is not allowed. Must be a text with a yaml array of hosts"
     required: true
-  image-destination-name:
-    description: "The desired name of the output artifact, defaults to: \"owner/repository\""
-    default: "${{ github.repository }}"
-    required: false
-#  image-destination-tag-override:
-#    description: "If the default tag generation is to be overridden"
-#    default: ""
-#    required: false
-
+    default: |
+      - ghcr.io
+  destinationImageNames:
+    description: "Must be a text with a yaml array of hosts"
+    required: true
+    default: |
+      - ${{ github.repository }}
+  autoTagging:
+    description: ""
+    required: true
+    default: "TAGS_AS_RELEASE"
+  destinationTags:
+    description: "Must be a text with a yaml array of hosts."
+    required: true
+    default: |
+      []
 
 outputs:
-  imageid:
+  imageId:
     description: Image ID/name for the intermediate image - probably a UUID or similar random string/value
-    value: ${{ steps.build-image.outputs.imageid }}
+    value: ${{ steps.build-image.outputs.imageId }}
   digest:
     description: Image digest for usage in helm charts or other deployments where it is desired to lock the version to this build
     value: ${{ steps.build-image.outputs.digest }}
-#  images-pushed:
-#    description: Full list (separated by new lines) of image names pushed
+  imagesPushed:
+    description: Full list (as yaml array) of image names pushed
+    value: ${{ steps.push-image.outputs.imagesPushed }}
 
 runs:
   using: composite
@@ -50,15 +55,15 @@ runs:
       uses: rohdef/action-build-container@main
       with:
         annotations: ${{ inputs.annotations }}
-        build-args: ${{ inputs.build-args }}
-        dockerfile-path: ${{ inputs.dockerfile-path }}
+        buildArgs: ${{ inputs.buildArgs }}
+        dockerfilePath: ${{ inputs.dockerfilePath }}
         labels: ${{ inputs.labels }}
 
     - name: Scan container for vulnerabilities
       id: cotainer-scanning
       uses: aquasecurity/trivy-action@0.28.0
       with:
-        image-ref: ${{ steps.build-image.outputs.imageid }}
+        image-ref: ${{ steps.build-image.outputs.imageId }}
         format: "table"
         exit-code: "1"
       env:
@@ -69,14 +74,8 @@ runs:
       id: push-image
       uses: rohdef/action-push-container@main
       with:
-        imageid: ${{ steps.build-image.outputs.imageid }}
-        destinationHosts: |
-          - rohdef.dk
-          - dummy.com
-        destinationImageNames: |
-          - bent
-          - birger
-        autoTagging: disabled
-        destinationTags: |
-          - actions
-          - test-actions
+        imageid: "${{ steps.build-image.outputs.imageId }}"
+        destinationHosts: "${{ inputs.destinationHosts }}"
+        destinationImageNames: "${{ inputs.destinationImageNames}} "
+        autoTagging: "${{ inputs.autoTagging }}"
+        destinationTags: "${{ inputs.destinationTags   }}"
