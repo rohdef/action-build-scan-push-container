@@ -74,8 +74,8 @@ runs:
       id: push-image
       uses: rohdef/action-push-container@main
       with:
-        imageid: "${{ steps.build-image.outputs.image-id }}"
-        destinationHosts: "${{ inputs.destination-hosts }}"
-        destinationImageNames: "${{ inputs.destination-image-names}} "
-        autoTagging: "${{ inputs.auto-tagging }}"
-        destinationTags: "${{ inputs.destination-tags }}"
+        image-id: "${{ steps.build-image.outputs.image-id }}"
+        destination-hosts: "${{ inputs.destination-hosts }}"
+        destination-image-names: "${{ inputs.destination-image-names}} "
+        auto-tagging: "${{ inputs.auto-tagging }}"
+        destination-tags: "${{ inputs.destination-tags }}"
