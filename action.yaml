@@ -67,7 +67,7 @@ runs:
 
     - name: Push image
       id: push-image
-      uses: rohdef/action-push-container
+      uses: rohdef/action-push-container@main
       with:
         imageId: ${{ steps.build-image.outputs.imageid }}
         destinationTags: |
