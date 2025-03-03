@@ -69,7 +69,14 @@ runs:
       id: push-image
       uses: rohdef/action-push-container@main
       with:
-        imageId: ${{ steps.build-image.outputs.imageid }}
+        imageid: ${{ steps.build-image.outputs.imageid }}
+        destinationHosts: |
+          - rohdef.dk
+          - dummy.com
+        destinationImageNames: |
+          - bent
+          - birger
+        autoTagging: disabled
         destinationTags: |
           - actions
           - test-actions
